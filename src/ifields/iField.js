@@ -79,6 +79,8 @@ export default class IField extends React.Component {
      */
     onMessage = (e) => {
         var data = e.data;
+        if (e.source !== this.iFrameRef)
+            return;
         switch (data.action) {
             case LOADED:
                 this.log("Message received: ifield loaded");
