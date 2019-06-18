@@ -135,6 +135,10 @@ export default class IField extends React.Component {
         if (props.onLoad)
             props.onLoad();
     }
+    /**
+     * 
+     * @param {{data: TokenData}} param0 
+     */
     onToken({ data }) {
         if (data.result === ERROR) {
             this.setState({ latestErrorTime: new Date() });
@@ -147,6 +151,10 @@ export default class IField extends React.Component {
                 this.props.onToken(data);
         }
     }
+    /**
+     * 
+     * @param {{data: UpdateData}} param0 
+     */
     onUpdate({ data }) {
         this.setState({
             ifieldDataCache: {
@@ -161,6 +169,10 @@ export default class IField extends React.Component {
         if (this.props.onUpdate)
             this.props.onUpdate(data);
     }
+    /**
+     * 
+     * @param {{data: SubmitData}} param0 
+     */
     onSubmit({ data }) {
         if (this.props.onSubmit)
             this.props.onSubmit(data);
@@ -180,6 +192,10 @@ export default class IField extends React.Component {
         this.logAction(PING);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {AccountData} data 
+     */
     setAccount(data) {
         var message = {
             action: SET_ACCOUNT_DATA,
@@ -204,6 +220,11 @@ export default class IField extends React.Component {
         this.logAction(GET_TOKEN);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {boolean} waitForResponse 
+     * @param {number} waitForResponseTimeout 
+     */
     enable3DS(waitForResponse, waitForResponseTimeout) {
         var message = {
             action: ENABLE3DS,
@@ -215,6 +236,11 @@ export default class IField extends React.Component {
         this.logAction(ENABLE3DS);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {string} fieldName - The field to update
+     * @param {string} value 
+     */
     update3DS(fieldName, value) {
         var message = {
             action: UPDATE3DS,
@@ -226,6 +252,10 @@ export default class IField extends React.Component {
         this.logAction(UPDATE3DS);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {string} issuer 
+     */
     updateIssuer(issuer) {
         var message = {
             action: UPDATE_ISSUER,
@@ -234,6 +264,10 @@ export default class IField extends React.Component {
         this.logAction(UPDATE_ISSUER);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {string} data 
+     */
     setPlaceholder(data) {
         var message = {
             action: SET_PLACEHOLDER,
@@ -242,6 +276,10 @@ export default class IField extends React.Component {
         this.logAction(SET_PLACEHOLDER);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {string} formatChar 
+     */
     enableAutoFormat(formatChar) {
         var message = {
             action: FORMAT,
@@ -259,6 +297,10 @@ export default class IField extends React.Component {
         this.logAction(ENABLE_LOGGING);
         this.postMessage(message);
     }
+    /**
+     * 
+     * @param {string} formId - The ID attribute of the form to trigger submit on
+     */
     enableAutoSubmit(formId) {
         var message = {
             action: ENABLE_AUTO_SUBMIT,
@@ -294,6 +336,10 @@ export default class IField extends React.Component {
     }
     //----------------------/
     //----------------------Helper Functions
+    /**
+     * 
+     * @param {{action: string, data: *}} data 
+     */
     postMessage(data) {
         if (!this.state.iFrameLoaded && data.action !== PING) {
             this.log("Iframe not loaded");
@@ -317,14 +363,26 @@ export default class IField extends React.Component {
         if (!props.type)
             this.error("Missing props (type)")
     }
+    /**
+     * 
+     * @param {string} message
+     */
     log(message) {
         if (this.props.options.enableLogging) {
             console.log(`IField ${this.props.type}: ${message}`);
         }
     }
+    /**
+     * 
+     * @param {string} action
+     */
     logAction(action) {
         this.log(`Sending message ${action}`);
     }
+    /**
+     * 
+     * @param {string} message
+     */
     error(message) {
         console.error(`IField ${this.props.type}: ${message}`);
     }
@@ -340,3 +398,29 @@ IField.defaultProps = {
         waitForResponseTimeout: WAIT_FOR_3DS_RESPONSE_TIMEOUT_DEFAULT
     }
 };
+
+/**
+ *
+ * @typedef TokenData
+ * @property {string} result
+ * @property {string} xToken
+ * @property {string} xTokenType
+ * @property {string} errorMessage
+ */
+/**
+ * @typedef UpdateData
+ * @property {boolean} isEmpty
+ * @property {boolean} isValid
+ * @property {number} length
+ * @property {number} cardNumberLength
+ */
+/**
+ * @typedef SubmitData
+ * @property {string} formId
+ */
+/**
+ * @typedef AccountData
+ * @property {string} xKey
+ * @property {string} xSoftwareName
+ * @property {string} xSoftwareVersion
+ */
