@@ -136,15 +136,16 @@ export default class IField extends React.Component {
             props.onLoad();
     }
     onToken(data) {
+    onToken({ data }) {
         if (data.result === ERROR) {
             this.setState({ latestErrorTime: new Date() });
             this.log("Token Error: " + data.errorMessage);
             if (this.props.onError)
-                this.props.onError(data.data);
+                this.props.onError(data);
         } else {
             this.setState({ xToken: data.xToken });
             if (this.props.onToken)
-                this.props.onToken(data.data);
+                this.props.onToken(data);
         }
     }
     onUpdate(data) {
