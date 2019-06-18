@@ -135,7 +135,6 @@ export default class IField extends React.Component {
         if (props.onLoad)
             props.onLoad();
     }
-    onToken(data) {
     onToken({ data }) {
         if (data.result === ERROR) {
             this.setState({ latestErrorTime: new Date() });
@@ -148,25 +147,25 @@ export default class IField extends React.Component {
                 this.props.onToken(data);
         }
     }
-    onUpdate(data) {
+    onUpdate({ data }) {
         this.setState({
             ifieldDataCache: {
-                length: this.props.type === CARD_TYPE ? data.data.cardNumberLength : data.data.length,
-                isEmpty: data.data.isEmpty,
-                isValid: data.data.isValid
+                length: this.props.type === CARD_TYPE ? data.cardNumberLength : data.length,
+                isEmpty: data.isEmpty,
+                isValid: data.isValid
             }
         });
-        if (data.data.isValid) {
+        if (data.isValid) {
             this.getToken();
         }
         if (this.props.onUpdate)
-            this.props.onUpdate(data.data);
+            this.props.onUpdate(data);
     }
-    onSubmit(data) {
+    onSubmit({ data }) {
         if (this.props.onSubmit)
-            this.props.onSubmit(data.data);
-        if (data.data && data.data.formId) {
-            document.getElementById(data.data.formId).dispatchEvent(new Event("submit", {
+            this.props.onSubmit(data);
+        if (data && data.formId) {
+            document.getElementById(data.formId).dispatchEvent(new Event("submit", {
                 bubbles: true,
                 cancelable: true
             }));
