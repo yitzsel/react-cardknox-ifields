@@ -79,7 +79,7 @@ export default class IField extends React.Component {
      */
     onMessage = (e) => {
         var data = e.data;
-        if (e.source !== this.iFrameRef)
+        if (e.source !== this.iFrameRef.current.contentWindow)
             return;
         switch (data.action) {
             case LOADED:
