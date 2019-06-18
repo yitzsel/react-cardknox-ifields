@@ -174,6 +174,7 @@ export default class IField extends React.Component {
      * @param {{data: SubmitData}} param0 
      */
     onSubmit({ data }) {
+        //call first before submit is triggered
         if (this.props.onSubmit)
             this.props.onSubmit(data);
         if (data && data.formId) {
