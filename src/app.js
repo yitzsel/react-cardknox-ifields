@@ -40,10 +40,10 @@ export default class App extends React.Component {
             autoFormatSeparator: ' ',
             autoSubmit: true,
             iFieldstyle: {
-                backgroundColor: 'blue'
+
             },
             iFrameStyle: {
-                backgroundColor: 'red'
+                
             },
             iFrameClassName: 'ifieldiframe'
         };
@@ -89,7 +89,7 @@ export default class App extends React.Component {
         console.log("Iframe loaded");
     }
     onUpdate = (data) => {
-        console.log("Iframe Updated", data);
+        // console.log("Iframe Updated", data);
         this.setState({ issuer: data.issuer });
     }
     onSubmit = (data) => {
