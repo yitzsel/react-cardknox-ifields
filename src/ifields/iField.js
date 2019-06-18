@@ -295,7 +295,7 @@ export default class IField extends React.Component {
     //----------------------/
     //----------------------Helper Functions
     postMessage(data) {
-        if (!this.state.iFrameLoaded) {
+        if (!this.state.iFrameLoaded && data.action !== PING) {
             this.log("Iframe not loaded");
             return;
         }
