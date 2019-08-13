@@ -5,4 +5,4 @@ export {
     CARD_TYPE,
     CVV_TYPE,
     ACH_TYPE
-} from './constants'
+} from './constants';

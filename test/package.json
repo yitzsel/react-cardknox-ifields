@@ -1,9 +1,10 @@
 {
-  "name": "react-cardknox-ifields",
+  "name": "test",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "react": "^16.8.6",
+    "react-cardknox-ifields": "file:../react-cardknox-ifields",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
   },
