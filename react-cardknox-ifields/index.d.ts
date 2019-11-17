@@ -50,7 +50,7 @@ export interface Props {
     issuer: string,
     type: string,
     src: string,
-    onLoad: function(): void,
+    onLoad: () => void,
     onUpdate: (data: UpdateData) => void,
     onSubmit: (data: SubmitData) => void,
     onToken: (data: TokenData) => void,
