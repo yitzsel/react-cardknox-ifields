@@ -5,9 +5,7 @@ export interface Options {
     autoFormat: boolean,
     autoFormatSeparator: string,
     autoSubmit: boolean,
-    iFieldstyle: object,
-    iFrameStyle: object,
-    iFrameClassName: string
+    iFieldstyle: object
 }
 
 export interface ThreeDS {
@@ -29,18 +27,20 @@ export interface UpdateData {
     isEmpty: boolean,
     isValid: boolean,
     length: number,
-    cardNumberLength: number
-}
-
-export interface SubmitData {
-    formId: string
+    cardNumberLength: number,
+    type: string,
+    issuer: string
 }
 
 export interface TokenData {
-    result: string,
     xToken: string,
-    xTokenType: string,
-    errorMessage: string
+    xTokenType: string
+}
+
+export interface ErrorData {
+    result: string,
+    errorMessage: string,
+    xTokenType: string
 }
 
 export interface Props {
@@ -52,9 +52,9 @@ export interface Props {
     src: string,
     onLoad: () => void,
     onUpdate: (data: UpdateData) => void,
-    onSubmit: (data: SubmitData) => void,
+    onSubmit: () => void,
     onToken: (data: TokenData) => void,
-    onError: (data: TokenData) => void
+    onError: (data: ErrorData) => void
 }
 
 export const CARD_TYPE: string;

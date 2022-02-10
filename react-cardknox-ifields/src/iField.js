@@ -3,7 +3,7 @@ import React from "react";
 import {
     LOADED, TOKEN, PING, STYLE, ERROR, AUTO_SUBMIT, UPDATE, GET_TOKEN, INIT, FORMAT, SET_PLACEHOLDER, FOCUS, CLEAR_DATA,
     CARD_TYPE, SET_ACCOUNT_DATA, ENABLE_LOGGING, ENABLE_AUTO_SUBMIT, ENABLE3DS, UPDATE3DS, AMOUNT,
-    MONTH, YEAR, WAIT_FOR_3DS_RESPONSE_TIMEOUT_DEFAULT, AUTO_FORMAT_DEFAULT_SEPARATOR, UPDATE_ISSUER
+    MONTH, YEAR, WAIT_FOR_3DS_RESPONSE_TIMEOUT_DEFAULT, AUTO_FORMAT_DEFAULT_SEPARATOR, UPDATE_ISSUER, IFIELD_ORIGIN, IFIELDS_VERSION, CVV_TYPE
 } from "./constants";
 
 export default class IField extends React.Component {
@@ -13,12 +13,9 @@ export default class IField extends React.Component {
         this.iFrameRef = React.createRef();
         this.state = {
             iFrameLoaded: false,
-            xTokenReceived: false,
-            latestErrorTime: new Date(),
             ifieldDataCache: {
-                isValid: false,
                 length: 0,
-                isEmpty: true
+                issuer: ''
             }
         };
     }
@@ -26,8 +23,7 @@ export default class IField extends React.Component {
         return (
             <iframe
                 style={this.props.options.iFrameStyle}
-                className={this.props.options.iFrameClassName}
-                src={this.props.src}
+                src={IFIELD_ORIGIN + '/ifields/' + IFIELDS_VERSION + '/ifield.htm'}
                 title={this.props.type}
                 ref={this.iFrameRef}>
             </iframe>
@@ -141,7 +137,6 @@ export default class IField extends React.Component {
      */
     onToken({ data }) {
         if (data.result === ERROR) {
-            this.setState({ latestErrorTime: new Date() });
             this.log("Token Error: " + data.errorMessage);
             if (this.props.onError)
                 this.props.onError(data);
@@ -156,16 +151,17 @@ export default class IField extends React.Component {
      * @param {{data: UpdateData}} param0 
      */
     onUpdate({ data }) {
+        if (this.shouldUpdateToken(data))
+            this.getToken();
         this.setState({
             ifieldDataCache: {
-                length: this.props.type === CARD_TYPE ? data.cardNumberLength : data.length,
-                isEmpty: data.isEmpty,
-                isValid: data.isValid
+                length: data.length,
+                issuer: data.issuer || this.state.ifieldDataCache.issuer
+                //todo handle cache token, handle null issuer in vue, angular
             }
         });
-        if (data.isValid) {
-            this.getToken();
-        }
+        if (this.props.type === CARD_TYPE)
+            data.issuer = data.issuer || 'unknown';
         if (this.props.onUpdate)
             this.props.onUpdate(data);
     }
@@ -176,7 +172,7 @@ export default class IField extends React.Component {
     onSubmit({ data }) {
         //call first before submit is triggered
         if (this.props.onSubmit)
-            this.props.onSubmit(data);
+            this.props.onSubmit();
         if (data && data.formId) {
             document.getElementById(data.formId).dispatchEvent(new Event("submit", {
                 bubbles: true,
@@ -260,7 +256,7 @@ export default class IField extends React.Component {
     updateIssuer(issuer) {
         var message = {
             action: UPDATE_ISSUER,
-            issuer
+            issuer: issuer || 'unknown'
         };
         this.logAction(UPDATE_ISSUER);
         this.postMessage(message);
@@ -348,6 +344,14 @@ export default class IField extends React.Component {
         }
         this.iFrameRef.current.contentWindow.postMessage(data, '*');
     }
+
+    shouldUpdateToken = (data) => {
+        return data.isValid
+            && this.props.options.autoSubmit
+            && (data.length !== this.state.ifieldDataCache.length
+                || (this.props.type === CVV_TYPE && this.props.issuer !== this.state.ifieldDataCache.issuer))
+    }
+
     validateProps() {
         var props = this.props;
         var accountProps = props.account ?
@@ -403,10 +407,8 @@ IField.defaultProps = {
 /**
  *
  * @typedef TokenData
- * @property {string} result
  * @property {string} xToken
  * @property {string} xTokenType
- * @property {string} errorMessage
  */
 /**
  * @typedef UpdateData
@@ -414,6 +416,8 @@ IField.defaultProps = {
  * @property {boolean} isValid
  * @property {number} length
  * @property {number} cardNumberLength
+ * @property {string} issuer
+ * @property {string} type
  */
 /**
  * @typedef SubmitData
