@@ -1,4 +1,4 @@
-# react-cardknox-ifields
+# react-ifields
 
 ## A React component for Cardknox iFields
 
@@ -39,7 +39,7 @@ The possible values for this property are
 These can be imported from the component
 
 ```
-import { CARD_TYPE, CVV_TYPE, ACH_TYPE } from 'react-cardknox-ifields';
+import { CARD_TYPE, CVV_TYPE, ACH_TYPE } from '@cardknox/react-ifields';
 ```
 
 #### 2. Account
