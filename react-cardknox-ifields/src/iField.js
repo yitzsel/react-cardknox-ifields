@@ -337,9 +337,13 @@ export default class IField extends React.Component {
      * 
      * @param {{action: string, data: *}} data 
      */
-    postMessage(data) {
+    postMessage(data, dontRetry) {
         if (!this.state.iFrameLoaded && data.action !== PING) {
-            this.log("Iframe not loaded");
+            this.log("Iframe not loaded, trying again");
+            if (dontRetry)
+                setTimeout(() => {
+                    this.postMessage(data, true);
+                }, 1000);
             return;
         }
         this.iFrameRef.current.contentWindow.postMessage(data, '*');
